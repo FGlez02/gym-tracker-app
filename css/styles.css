@@ -257,3 +257,55 @@ body {
     background: white;
     color: #111827;
 }
+
+.sets-table {
+    background: #f9fafb;
+    border-radius: 16px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.sets-header,
+.set-input-row {
+    display: grid;
+    grid-template-columns: 52px 1fr 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.sets-header {
+    color: #6b7280;
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.set-input-row {
+    margin-bottom: 10px;
+}
+
+.set-input-row:last-child {
+    margin-bottom: 0;
+}
+
+.set-input-row > span {
+    font-weight: 800;
+    color: #374151;
+    text-align: center;
+}
+
+.set-input-row input {
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 13px;
+    font-size: 1rem;
+    background: white;
+    width: 100%;
+}
+
+.set-input-row input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
