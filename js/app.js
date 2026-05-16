@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadGroups() {
+    console.log('API_URL usada:', API_URL);
+    console.log('URL getGroups:', `${API_URL}?action=getGroups`);   
     try {
         const data = await fetchGroups();
 
