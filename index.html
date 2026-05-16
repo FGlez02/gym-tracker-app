@@ -21,15 +21,6 @@
 
     <main class="main-content">
 
-        <section class="quick-card">
-            <h2>Ejercicios recientes</h2>
-            <div class="chips">
-                <button>Press banca</button>
-                <button>Sentadilla</button>
-                <button>Remo polea</button>
-                <button>Press militar</button>
-            </div>
-        </section>
 
         <section class="card">
             <div class="card-header">
@@ -45,13 +36,45 @@
                 <input type="date" id="date">
             </div>
 
-            <div class="field">
-                <label for="exercise">Ejercicio</label>
-                <input 
-                    type="text" 
-                    id="exercise"
-                    placeholder="Ej: press banca"
-                >
+            <div class="row">
+                <div class="field">
+                    <label for="group">Grupo</label>
+                    <select id="group">
+                        <option value="">Elegir grupo</option>
+                        <option>Pecho</option>
+                        <option>Espalda</option>
+                        <option>Pierna</option>
+                        <option>Hombro</option>
+                        <option>Biceps</option>
+                        <option>Triceps</option>
+                        <option>Core</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="exercise">Ejercicio</label>
+                    <select id="exercise">
+                        <option value="">Elegir ejercicio</option>
+                        <option>Press banca</option>
+                        <option>Press inclinado mancuernas</option>
+                        <option>Remo polea</option>
+                        <option>Sentadilla</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="last-session-card">
+                <div>
+                    <p class="eyebrow">Ultima vez</p>
+                    <h3>Press banca</h3>
+                    <span>12/05/2026</span>
+                </div>
+
+                <div class="last-sets">
+                    <p>Serie 1 · <strong>80 kg x 8</strong></p>
+                    <p>Serie 2 · <strong>80 kg x 7</strong></p>
+                    <p>Serie 3 · <strong>77.5 kg x 8</strong></p>
+                </div>
             </div>
 
             <div class="sets-table">

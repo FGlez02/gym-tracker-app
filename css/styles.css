@@ -260,16 +260,16 @@ body {
 
 .sets-table {
     background: #f9fafb;
-    border-radius: 16px;
-    padding: 12px;
-    margin-bottom: 16px;
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 18px;
 }
 
 .sets-header,
 .set-input-row {
     display: grid;
-    grid-template-columns: 52px 1fr 1fr;
-    gap: 10px;
+    grid-template-columns: 58px 1.4fr 1fr;
+    gap: 12px;
     align-items: center;
 }
 
@@ -277,12 +277,12 @@ body {
     color: #6b7280;
     font-size: 0.8rem;
     font-weight: 800;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     text-transform: uppercase;
 }
 
 .set-input-row {
-    margin-bottom: 10px;
+    margin-bottom: 14px;
 }
 
 .set-input-row:last-child {
@@ -290,22 +290,83 @@ body {
 }
 
 .set-input-row > span {
-    font-weight: 800;
+    font-weight: 900;
     color: #374151;
     text-align: center;
+    font-size: 1.1rem;
 }
 
 .set-input-row input {
     border: 1px solid #d1d5db;
-    border-radius: 12px;
-    padding: 13px;
-    font-size: 1rem;
+    border-radius: 16px;
+    padding: 18px 14px;
+    font-size: 1.2rem;
     background: white;
     width: 100%;
+    min-height: 58px;
+    font-weight: 700;
 }
 
 .set-input-row input:focus {
     outline: none;
     border-color: #6366f1;
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.set-input-row .input-unit span {
+    font-size: 0.95rem;
+    right: 12px;
+}
+
+.set-input-row .input-unit input {
+    padding-right: 42px;
+}
+
+.field select {
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
+    padding: 15px;
+    font-size: 1rem;
+    background: #f9fafb;
+    width: 100%;
+}
+
+.field select:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.last-session-card {
+    background: #eef2ff;
+    border-radius: 18px;
+    padding: 15px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.last-session-card h3 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.last-session-card span {
+    color: #6b7280;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.last-sets {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+}
+
+.last-sets p {
+    font-size: 0.9rem;
+    padding: 6px 0;
+    color: #374151;
 }
