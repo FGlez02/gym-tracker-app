@@ -1,3 +1,3 @@
 // js/config.js
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbyy_Qg_k4UdRmc4ZhzthaFDjb08jEo1q4efSAVSDhMM5b5XNRsJcLlkqMi1cRfTLaILNg/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxp0mkljpAagPRnso1fOQ-wjuJHi5ghqvZHj5-T8Nooqp_VPY_d6sP5P_LCT5nOY5PFtw/exec';
