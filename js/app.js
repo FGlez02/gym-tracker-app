@@ -183,3 +183,79 @@ async function loadTodayWorkout() {
         console.error('Error cargando entrenamiento de hoy:', error);
     }
 }
+
+const saveWorkoutBtn = document.getElementById('save-workout-btn');
+
+saveWorkoutBtn.addEventListener('click', async () => {
+    const date = document.getElementById('date').value;
+    const exercise = exerciseSelect.value;
+    const notes = document.getElementById('notes').value;
+
+    if (!exercise) {
+        alert('Elige un ejercicio primero.');
+        return;
+    }
+
+    const weightInputs = document.querySelectorAll('.set-weight');
+    const repsInputs = document.querySelectorAll('.set-reps');
+
+    const series = [];
+
+    weightInputs.forEach((weightInput, index) => {
+        const peso = weightInput.value;
+        const reps = repsInputs[index].value;
+
+        if (peso !== '' && reps !== '') {
+            series.push({
+                serie: index + 1,
+                peso: Number(peso),
+                reps: Number(reps)
+            });
+        }
+    });
+
+    if (series.length === 0) {
+        alert('Rellena al menos una serie.');
+        return;
+    }
+
+    const payload = {
+        action: 'addWorkout',
+        date: date,
+        exercise: exercise,
+        notes: notes,
+        series: series
+    };
+
+    try {
+        saveWorkoutBtn.disabled = true;
+        saveWorkoutBtn.textContent = 'Guardando...';
+
+        const result = await saveWorkout(payload);
+
+        console.log('Resultado guardado:', result);
+
+        if (!result.success) {
+            alert('Error al guardar.');
+            return;
+        }
+
+        clearWorkoutForm();
+        await loadTodayWorkout();
+
+        alert(`Guardado: ${result.insertedRows} series.`);
+
+    } catch (error) {
+        console.error('Error guardando entrenamiento:', error);
+        alert('No se pudo guardar el entrenamiento.');
+    } finally {
+        saveWorkoutBtn.disabled = false;
+        saveWorkoutBtn.textContent = 'Guardar ejercicio';
+    }
+});
+
+function clearWorkoutForm() {
+    document.querySelectorAll('.set-weight').forEach(input => input.value = '');
+    document.querySelectorAll('.set-reps').forEach(input => input.value = '');
+    document.getElementById('notes').value = '';
+}

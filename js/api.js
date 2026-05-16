@@ -21,3 +21,12 @@ async function fetchTodayWorkout() {
     const response = await fetch(`${API_URL}?action=getTodayWorkout`);
     return await response.json();
 }
+
+async function saveWorkout(payload) {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    });
+
+    return await response.json();
+}
