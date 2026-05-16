@@ -1,3 +1,4 @@
+console.log('app.js cargado correctamente');
 const groupSelect = document.getElementById('group');
 const exerciseSelect = document.getElementById('exercise');
 
@@ -6,7 +7,7 @@ const lastExerciseTitle = document.querySelector('.last-session-card h3');
 const lastExerciseDate = document.querySelector('.last-session-card .last-date');
 const lastSetsContainer = document.querySelector('.last-sets');
 
-document.addEventListener('DOMContentLoaded', async () => {
+window.addEventListener('load', async () => {
     resetExerciseSelect();
     resetLastSession();
     await loadGroups();
