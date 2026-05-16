@@ -128,16 +128,15 @@ function formatDate(dateString) {
 }
 
 async function loadTodayWorkout() {
-    const todayCard = document.querySelector('.today-card');
-    const sectionTitleSpan = document.querySelector('.today-card .section-title span');
+    const todayWorkoutList = document.getElementById('today-workout-list');
+    const sectionTitleSpan = document.getElementById('today-total-series');
 
     try {
         const data = await fetchTodayWorkout();
 
         console.log('Entrenamiento de hoy:', data);
 
-        const existingBlocks = todayCard.querySelectorAll('.exercise-block');
-        existingBlocks.forEach(block => block.remove());
+        todayWorkoutList.innerHTML = '';
 
         if (!data.found) {
             sectionTitleSpan.textContent = '0 series';
@@ -151,7 +150,7 @@ async function loadTodayWorkout() {
                 </div>
             `;
 
-            todayCard.appendChild(emptyBlock);
+            todayWorkoutList.appendChild(emptyBlock);
             return;
         }
 
@@ -177,7 +176,7 @@ async function loadTodayWorkout() {
                 ${seriesHtml}
             `;
 
-            todayCard.appendChild(block);
+            todayWorkoutList.appendChild(block);
         });
 
     } catch (error) {
