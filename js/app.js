@@ -11,6 +11,7 @@ window.addEventListener('load', async () => {
     resetExerciseSelect();
     resetLastSession();
     await loadGroups();
+    await loadTodayWorkout();
 });
 
 async function loadGroups() {
@@ -124,4 +125,62 @@ function resetLastSession() {
 function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES');
+}
+
+async function loadTodayWorkout() {
+    const todayCard = document.querySelector('.today-card');
+    const sectionTitleSpan = document.querySelector('.today-card .section-title span');
+
+    try {
+        const data = await fetchTodayWorkout();
+
+        console.log('Entrenamiento de hoy:', data);
+
+        const existingBlocks = todayCard.querySelectorAll('.exercise-block');
+        existingBlocks.forEach(block => block.remove());
+
+        if (!data.found) {
+            sectionTitleSpan.textContent = '0 series';
+
+            const emptyBlock = document.createElement('div');
+            emptyBlock.className = 'exercise-block';
+            emptyBlock.innerHTML = `
+                <h3>Sin series registradas</h3>
+                <div class="set-row">
+                    <span>Cuando guardes un ejercicio, aparecera aqui.</span>
+                </div>
+            `;
+
+            todayCard.appendChild(emptyBlock);
+            return;
+        }
+
+        sectionTitleSpan.textContent = `${data.totalSeries} series`;
+
+        data.exercises.forEach(exercise => {
+            const block = document.createElement('div');
+            block.className = 'exercise-block';
+
+            let seriesHtml = '';
+
+            exercise.series.forEach(set => {
+                seriesHtml += `
+                    <div class="set-row">
+                        <span>Serie ${set.serie}</span>
+                        <strong>${set.peso} kg x ${set.reps}</strong>
+                    </div>
+                `;
+            });
+
+            block.innerHTML = `
+                <h3>${exercise.exercise}</h3>
+                ${seriesHtml}
+            `;
+
+            todayCard.appendChild(block);
+        });
+
+    } catch (error) {
+        console.error('Error cargando entrenamiento de hoy:', error);
+    }
 }

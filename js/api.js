@@ -16,3 +16,8 @@ async function fetchLastExercise(exercise) {
     );
     return await response.json();
 }
+
+async function fetchTodayWorkout() {
+    const response = await fetch(`${API_URL}?action=getTodayWorkout`);
+    return await response.json();
+}
