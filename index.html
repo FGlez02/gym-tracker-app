@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/app.js"></script>
-
 <body>
 
 <div class="app">
@@ -25,7 +21,6 @@
     </header>
 
     <main class="main-content">
-
 
         <section class="card">
             <div class="card-header">
@@ -45,25 +40,14 @@
                 <div class="field">
                     <label for="group">Grupo</label>
                     <select id="group">
-                        <option value="">Elegir grupo</option>
-                        <option>Pecho</option>
-                        <option>Espalda</option>
-                        <option>Pierna</option>
-                        <option>Hombro</option>
-                        <option>Biceps</option>
-                        <option>Triceps</option>
-                        <option>Core</option>
+                        <option value="">Cargando grupos...</option>
                     </select>
                 </div>
 
                 <div class="field">
                     <label for="exercise">Ejercicio</label>
-                    <select id="exercise">
-                        <option value="">Elegir ejercicio</option>
-                        <option>Press banca</option>
-                        <option>Press inclinado mancuernas</option>
-                        <option>Remo polea</option>
-                        <option>Sentadilla</option>
+                    <select id="exercise" disabled>
+                        <option value="">Primero elige grupo</option>
                     </select>
                 </div>
             </div>
@@ -71,14 +55,12 @@
             <div class="last-session-card">
                 <div>
                     <p class="eyebrow">Ultima vez</p>
-                    <h3>Press banca</h3>
-                    <span>12/05/2026</span>
+                    <h3>Selecciona un ejercicio</h3>
+                    <span class="last-date"></span>
                 </div>
 
                 <div class="last-sets">
-                    <p>Serie 1 · <strong>80 kg x 8</strong></p>
-                    <p>Serie 2 · <strong>80 kg x 7</strong></p>
-                    <p>Serie 3 · <strong>77.5 kg x 8</strong></p>
+                    <p>Aqui aparecera lo que hiciste la ultima vez.</p>
                 </div>
             </div>
 
@@ -143,25 +125,13 @@
         <section class="today-card">
             <div class="section-title">
                 <h2>Entrenamiento de hoy</h2>
-                <span>3 series</span>
+                <span>0 series</span>
             </div>
 
             <div class="exercise-block">
-                <h3>Press banca</h3>
-
+                <h3>Sin series registradas</h3>
                 <div class="set-row">
-                    <span>Serie 1</span>
-                    <strong>80 kg x 8</strong>
-                </div>
-
-                <div class="set-row">
-                    <span>Serie 2</span>
-                    <strong>80 kg x 7</strong>
-                </div>
-
-                <div class="set-row">
-                    <span>Serie 3</span>
-                    <strong>77.5 kg x 8</strong>
+                    <span>Cuando guardes un ejercicio, aparecerá aquí.</span>
                 </div>
             </div>
         </section>
@@ -175,6 +145,10 @@
     </nav>
 
 </div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
 
 </body>
 </html>
