@@ -103,6 +103,8 @@ exerciseSelect.addEventListener('change', async () => {
             lastSetsContainer.appendChild(p);
         });
 
+        setLastSessionPlaceholders(data.series);
+
     } catch (error) {
         console.error('Error cargando ultima sesion:', error);
         lastExerciseTitle.textContent = 'Error al cargar';
@@ -120,6 +122,7 @@ function resetLastSession() {
     lastExerciseTitle.textContent = 'Selecciona un ejercicio';
     lastExerciseDate.textContent = '';
     lastSetsContainer.innerHTML = '<p>Aqui aparecera lo que hiciste la ultima vez.</p>';
+    clearSetPlaceholders();
 }
 
 function formatDate(dateString) {
@@ -258,4 +261,28 @@ function clearWorkoutForm() {
     document.querySelectorAll('.set-weight').forEach(input => input.value = '');
     document.querySelectorAll('.set-reps').forEach(input => input.value = '');
     document.getElementById('notes').value = '';
+}
+
+function setLastSessionPlaceholders(series) {
+    const weightInputs = document.querySelectorAll('.set-weight');
+    const repsInputs = document.querySelectorAll('.set-reps');
+
+    clearSetPlaceholders();
+
+    series.forEach((set, index) => {
+        if (weightInputs[index] && repsInputs[index]) {
+            weightInputs[index].placeholder = set.peso;
+            repsInputs[index].placeholder = set.reps;
+        }
+    });
+}
+
+function clearSetPlaceholders() {
+    document.querySelectorAll('.set-weight').forEach(input => {
+        input.placeholder = '';
+    });
+
+    document.querySelectorAll('.set-reps').forEach(input => {
+        input.placeholder = '';
+    });
 }
