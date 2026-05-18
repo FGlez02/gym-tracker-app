@@ -17,9 +17,12 @@ const finishPanel = document.getElementById('finish-panel');
 const trainingCategorySelect = document.getElementById('training-category');
 const trainingNotesInput = document.getElementById('training-notes');
 
+const todayDateElement = document.getElementById('today-date');
+
 let currentTrainingId = localStorage.getItem('currentTrainingId');
 
 window.addEventListener('load', async () => {
+    setTodayDate();
     resetExerciseSelect();
     resetLastSession();
     await loadGroups();
@@ -204,7 +207,6 @@ async function loadTodayWorkout() {
 const saveWorkoutBtn = document.getElementById('save-workout-btn');
 
 saveWorkoutBtn.addEventListener('click', async () => {
-    const date = document.getElementById('date').value;
     const exercise = exerciseSelect.value;
     const notes = document.getElementById('notes').value;
 
@@ -244,7 +246,6 @@ saveWorkoutBtn.addEventListener('click', async () => {
     const payload = {
         action: 'addWorkout',
         entrenamientoId: currentTrainingId,
-        date: date,
         exercise: exercise,
         notes: notes,
         series: series
@@ -436,3 +437,17 @@ confirmFinishBtn.addEventListener('click', async () => {
         confirmFinishBtn.textContent = 'Confirmar finalizacion';
     }
 });
+
+function setTodayDate() {
+    const today = new Date();
+
+    const formatted = today.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    });
+
+    todayDateElement.textContent =
+        formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}

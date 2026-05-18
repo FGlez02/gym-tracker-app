@@ -435,3 +435,10 @@ body {
 .hidden {
     display: none;
 }
+
+.today-date {
+    margin-top: 10px;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
