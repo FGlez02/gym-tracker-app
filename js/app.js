@@ -7,11 +7,25 @@ const lastExerciseTitle = document.querySelector('.last-session-card h3');
 const lastExerciseDate = document.querySelector('.last-session-card .last-date');
 const lastSetsContainer = document.querySelector('.last-sets');
 
+const startTrainingBtn = document.getElementById('start-training-btn');
+const finishTrainingBtn = document.getElementById('finish-training-btn');
+const confirmFinishBtn = document.getElementById('confirm-finish-btn');
+
+const sessionStatus = document.getElementById('session-status');
+const sessionDetail = document.getElementById('session-detail');
+const finishPanel = document.getElementById('finish-panel');
+const trainingCategorySelect = document.getElementById('training-category');
+const trainingNotesInput = document.getElementById('training-notes');
+
+let currentTrainingId = localStorage.getItem('currentTrainingId');
+
 window.addEventListener('load', async () => {
     resetExerciseSelect();
     resetLastSession();
     await loadGroups();
     await loadTodayWorkout();
+    await loadTrainingTypes();
+    await loadActiveTraining();
 });
 
 async function loadGroups() {
@@ -222,8 +236,14 @@ saveWorkoutBtn.addEventListener('click', async () => {
         return;
     }
 
+    if (!currentTrainingId) {
+        alert('Primero inicia un entrenamiento.');
+        return;
+    }
+
     const payload = {
         action: 'addWorkout',
+        entrenamientoId: currentTrainingId,
         date: date,
         exercise: exercise,
         notes: notes,
@@ -286,3 +306,133 @@ function clearSetPlaceholders() {
         input.placeholder = '';
     });
 }
+
+async function loadTrainingTypes() {
+    try {
+        const data = await fetchTrainingTypes();
+
+        trainingCategorySelect.innerHTML = '<option value="">Elegir categoria</option>';
+
+        data.categorias.forEach(categoria => {
+            const option = document.createElement('option');
+            option.value = categoria;
+            option.textContent = categoria;
+            trainingCategorySelect.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error('Error cargando categorias:', error);
+    }
+}
+
+async function loadActiveTraining() {
+    try {
+        const data = await fetchActiveTraining();
+
+        if (data.active) {
+            currentTrainingId = data.entrenamientoId;
+            localStorage.setItem('currentTrainingId', currentTrainingId);
+
+            setTrainingActive(data.entrenamientoId, data.inicio);
+        } else {
+            currentTrainingId = null;
+            localStorage.removeItem('currentTrainingId');
+
+            setTrainingInactive();
+        }
+
+    } catch (error) {
+        console.error('Error cargando entrenamiento activo:', error);
+    }
+}
+
+function setTrainingActive(entrenamientoId, inicio) {
+    sessionStatus.textContent = 'Entrenamiento iniciado';
+    sessionDetail.textContent = `ID: ${entrenamientoId} · Inicio: ${inicio}`;
+
+    startTrainingBtn.disabled = true;
+    finishTrainingBtn.disabled = false;
+}
+
+function setTrainingInactive() {
+    sessionStatus.textContent = 'Sin entrenamiento iniciado';
+    sessionDetail.textContent = 'Pulsa iniciar para empezar una sesion.';
+
+    startTrainingBtn.disabled = false;
+    finishTrainingBtn.disabled = true;
+
+    finishPanel.classList.add('hidden');
+}
+
+startTrainingBtn.addEventListener('click', async () => {
+    try {
+        startTrainingBtn.disabled = true;
+        startTrainingBtn.textContent = 'Iniciando...';
+
+        const result = await startTraining();
+
+        if (!result.success) {
+            alert('No se pudo iniciar el entrenamiento.');
+            return;
+        }
+
+        currentTrainingId = result.entrenamientoId;
+        localStorage.setItem('currentTrainingId', currentTrainingId);
+
+        setTrainingActive(result.entrenamientoId, result.inicio);
+
+    } catch (error) {
+        console.error('Error iniciando entrenamiento:', error);
+        alert('Error al iniciar entrenamiento.');
+    } finally {
+        startTrainingBtn.textContent = 'Iniciar entrenamiento';
+    }
+});
+
+finishTrainingBtn.addEventListener('click', () => {
+    finishPanel.classList.toggle('hidden');
+});
+
+confirmFinishBtn.addEventListener('click', async () => {
+    const categoria = trainingCategorySelect.value;
+    const notes = trainingNotesInput.value;
+
+    if (!currentTrainingId) {
+        alert('No hay entrenamiento iniciado.');
+        return;
+    }
+
+    if (!categoria) {
+        alert('Elige una categoria.');
+        return;
+    }
+
+    try {
+        confirmFinishBtn.disabled = true;
+        confirmFinishBtn.textContent = 'Finalizando...';
+
+        const result = await finishTraining(currentTrainingId, categoria, notes);
+
+        if (!result.success) {
+            alert('No se pudo finalizar el entrenamiento.');
+            return;
+        }
+
+        currentTrainingId = null;
+        localStorage.removeItem('currentTrainingId');
+
+        trainingCategorySelect.value = '';
+        trainingNotesInput.value = '';
+
+        setTrainingInactive();
+
+        alert(`Entrenamiento finalizado. Duracion: ${result.duracion}`);
+
+    } catch (error) {
+        console.error('Error finalizando entrenamiento:', error);
+        alert('Error al finalizar entrenamiento.');
+    } finally {
+        confirmFinishBtn.disabled = false;
+        confirmFinishBtn.textContent = 'Confirmar finalizacion';
+    }
+});

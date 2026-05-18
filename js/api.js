@@ -30,3 +30,38 @@ async function saveWorkout(payload) {
 
     return await response.json();
 }
+
+async function startTraining() {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            action: 'startTraining'
+        })
+    });
+
+    return await response.json();
+}
+
+async function finishTraining(entrenamientoId, categoria, notes) {
+    const response = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+            action: 'finishTraining',
+            entrenamientoId,
+            categoria,
+            notes
+        })
+    });
+
+    return await response.json();
+}
+
+async function fetchTrainingTypes() {
+    const response = await fetch(`${API_URL}?action=getTrainingTypes`);
+    return await response.json();
+}
+
+async function fetchActiveTraining() {
+    const response = await fetch(`${API_URL}?action=getActiveTraining`);
+    return await response.json();
+}

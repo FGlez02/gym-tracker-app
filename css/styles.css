@@ -370,3 +370,68 @@ body {
     padding: 6px 0;
     color: #374151;
 }
+
+.session-card {
+    background: #111827;
+    color: white;
+    border-radius: 22px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.session-card .eyebrow {
+    color: #a5b4fc;
+}
+
+.session-info h2 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+}
+
+.session-info span {
+    color: #d1d5db;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.session-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.session-btn {
+    border: none;
+    border-radius: 14px;
+    padding: 13px 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.session-btn.start {
+    background: #22c55e;
+    color: white;
+}
+
+.session-btn.finish {
+    background: #f97316;
+    color: white;
+}
+
+.session-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.finish-panel {
+    background: white;
+    color: #111827;
+    border-radius: 18px;
+    padding: 14px;
+    margin-top: 16px;
+}
+
+.hidden {
+    display: none;
+}

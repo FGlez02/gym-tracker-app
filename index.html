@@ -22,6 +22,43 @@
 
     <main class="main-content">
 
+        <section class="session-card">
+            <div class="session-info">
+                <p class="eyebrow">Entrenamiento actual</p>
+                <h2 id="session-status">Sin entrenamiento iniciado</h2>
+                <span id="session-detail">Pulsa iniciar para empezar una sesion.</span>
+            </div>
+
+            <div class="session-actions">
+                <button id="start-training-btn" class="session-btn start">
+                    Iniciar entrenamiento
+                </button>
+
+                <button id="finish-training-btn" class="session-btn finish" disabled>
+                    Finalizar entrenamiento
+                </button>
+            </div>
+
+            <div id="finish-panel" class="finish-panel hidden">
+                <div class="field">
+                    <label for="training-category">Categoria</label>
+                    <select id="training-category">
+                        <option value="">Elegir categoria</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="training-notes">Notas del entrenamiento</label>
+                    <textarea id="training-notes" rows="2" placeholder="Opcional"></textarea>
+                </div>
+
+                <button id="confirm-finish-btn" class="save-btn">
+                    Confirmar finalizacion
+                </button>
+            </div>
+        </section>
+
+
         <section class="card">
             <div class="card-header">
                 <div>
