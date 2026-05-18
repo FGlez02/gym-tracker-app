@@ -477,7 +477,7 @@ function startTrainingTimer(startTime) {
 
     const today = new Date();
 
-    const [hours, minutes] = startTime.split(':').map(Number);
+    const [hours, minutes, seconds] = startTime.split(':').map(Number);
 
     const startDate = new Date(
         today.getFullYear(),
@@ -485,7 +485,7 @@ function startTrainingTimer(startTime) {
         today.getDate(),
         hours,
         minutes,
-        0
+        seconds
     );
 
     trainingStartTimestamp = startDate.getTime();
