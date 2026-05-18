@@ -19,6 +19,17 @@ const trainingNotesInput = document.getElementById('training-notes');
 
 const todayDateElement = document.getElementById('today-date');
 
+const trainingTimer = document.getElementById('training-timer');
+
+const copyLastSessionBtn = document.getElementById('copy-last-session-btn');
+
+const toast = document.getElementById('toast');
+
+let latestExerciseData = null;
+
+let trainingStartTimestamp = null;
+let trainingTimerInterval = null;
+
 let currentTrainingId = localStorage.getItem('currentTrainingId');
 
 window.addEventListener('load', async () => {
@@ -99,6 +110,8 @@ exerciseSelect.addEventListener('change', async () => {
 
     try {
         const data = await fetchLastExercise(selectedExercise);
+
+        latestExerciseData = data;
 
         console.log('Ultima sesion recibida:', data);
 
@@ -211,7 +224,7 @@ saveWorkoutBtn.addEventListener('click', async () => {
     const notes = document.getElementById('notes').value;
 
     if (!exercise) {
-        alert('Elige un ejercicio primero.');
+        showToast('Elige un ejercicio primero.');
         return;
     }
 
@@ -234,12 +247,12 @@ saveWorkoutBtn.addEventListener('click', async () => {
     });
 
     if (series.length === 0) {
-        alert('Rellena al menos una serie.');
+        showToast('Rellena al menos una serie.');
         return;
     }
 
     if (!currentTrainingId) {
-        alert('Primero inicia un entrenamiento.');
+        showToast('Primero inicia un entrenamiento.');
         return;
     }
 
@@ -260,18 +273,18 @@ saveWorkoutBtn.addEventListener('click', async () => {
         console.log('Resultado guardado:', result);
 
         if (!result.success) {
-            alert('Error al guardar.');
+            showToast('Error al guardar.');
             return;
         }
 
         clearWorkoutForm();
         await loadTodayWorkout();
 
-        alert(`Guardado: ${result.insertedRows} series.`);
+        showToast(`Guardado: ${result.insertedRows} series.`);
 
     } catch (error) {
         console.error('Error guardando entrenamiento:', error);
-        alert('No se pudo guardar el entrenamiento.');
+        showToast('No se pudo guardar el entrenamiento.');
     } finally {
         saveWorkoutBtn.disabled = false;
         saveWorkoutBtn.textContent = 'Guardar ejercicio';
@@ -348,6 +361,7 @@ async function loadActiveTraining() {
 }
 
 function setTrainingActive(entrenamientoId, inicio) {
+    startTrainingTimer(inicio);
     sessionStatus.textContent = 'Entrenamiento iniciado';
     sessionDetail.textContent = `ID: ${entrenamientoId} · Inicio: ${inicio}`;
 
@@ -361,6 +375,9 @@ function setTrainingInactive() {
 
     startTrainingBtn.disabled = false;
     finishTrainingBtn.disabled = true;
+    clearInterval(trainingTimerInterval);
+
+    trainingTimer.textContent = '00:00:00';
 
     finishPanel.classList.add('hidden');
 }
@@ -374,7 +391,7 @@ startTrainingBtn.addEventListener('click', async () => {
         
 
         if (!result.success) {
-            alert('No se pudo iniciar el entrenamiento.');
+            showToast('No se pudo iniciar el entrenamiento.');
             return;
         }
 
@@ -385,7 +402,7 @@ startTrainingBtn.addEventListener('click', async () => {
 
     } catch (error) {
         console.error('Error iniciando entrenamiento:', error);
-        alert('Error al iniciar entrenamiento.');
+        showToast('Error al iniciar entrenamiento.');
     } finally {
         startTrainingBtn.textContent = 'Iniciar entrenamiento';
     }
@@ -400,12 +417,12 @@ confirmFinishBtn.addEventListener('click', async () => {
     const notes = trainingNotesInput.value;
 
     if (!currentTrainingId) {
-        alert('No hay entrenamiento iniciado.');
+        showToast('No hay entrenamiento iniciado.');
         return;
     }
 
     if (!tipoEntrenamiento) {
-        alert('Elige un tipo de entrenamiento.');
+        showToast('Elige un tipo de entrenamiento.');
         return;
     }
 
@@ -417,7 +434,7 @@ confirmFinishBtn.addEventListener('click', async () => {
         console.log('Resultado finishTraining:', result);
 
         if (!result.success) {
-            alert('No se pudo finalizar el entrenamiento.');
+            showToast('No se pudo finalizar el entrenamiento.');
             return;
         }
 
@@ -429,11 +446,11 @@ confirmFinishBtn.addEventListener('click', async () => {
 
         setTrainingInactive();
 
-        alert(`Entrenamiento finalizado. Duracion: ${result.duracion}`);
+        showToast(`Entrenamiento finalizado. Duracion: ${result.duracion}`);
 
     } catch (error) {
         console.error('Error finalizando entrenamiento:', error);
-        alert('Error al finalizar entrenamiento.');
+        showToast('Error al finalizar entrenamiento.');
     } finally {
         confirmFinishBtn.disabled = false;
         confirmFinishBtn.textContent = 'Confirmar finalizacion';
@@ -452,4 +469,80 @@ function setTodayDate() {
 
     todayDateElement.textContent =
         formatted.charAt(0).toUpperCase() + formatted.slice(1);
+}
+
+function startTrainingTimer(startTime) {
+
+    clearInterval(trainingTimerInterval);
+
+    const today = new Date();
+
+    const [hours, minutes] = startTime.split(':').map(Number);
+
+    const startDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hours,
+        minutes,
+        0
+    );
+
+    trainingStartTimestamp = startDate.getTime();
+
+    updateTrainingTimer();
+
+    trainingTimerInterval = setInterval(updateTrainingTimer, 1000);
+}
+
+function updateTrainingTimer() {
+
+    if (!trainingStartTimestamp) return;
+
+    const now = Date.now();
+
+    const diff = Math.floor((now - trainingStartTimestamp) / 1000);
+
+    const hours = Math.floor(diff / 3600);
+    const minutes = Math.floor((diff % 3600) / 60);
+    const seconds = diff % 60;
+
+    trainingTimer.textContent =
+        `${String(hours).padStart(2, '0')}:` +
+        `${String(minutes).padStart(2, '0')}:` +
+        `${String(seconds).padStart(2, '0')}`;
+}
+
+copyLastSessionBtn.addEventListener('click', () => {
+
+    if (!latestExerciseData || !latestExerciseData.series) {
+        showToast('No hay datos para copiar.');
+        return;
+    }
+
+    const weightInputs = document.querySelectorAll('.set-weight');
+    const repsInputs = document.querySelectorAll('.set-reps');
+
+    latestExerciseData.series.forEach((set, index) => {
+
+        if (weightInputs[index] && repsInputs[index]) {
+
+            weightInputs[index].value = set.peso;
+            repsInputs[index].value = set.reps;
+        }
+    });
+
+    showToast('Ultima sesion copiada.');
+});
+
+
+function showToast(message) {
+
+    toast.textContent = message;
+
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2500);
 }

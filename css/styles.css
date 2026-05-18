@@ -442,3 +442,44 @@ body {
     font-size: 0.9rem;
     font-weight: 600;
 }
+
+.training-timer {
+    margin-top: 14px;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: white;
+}
+
+.copy-last-btn {
+    margin-top: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-weight: 700;
+    background: #1e293b;
+    color: white;
+    cursor: pointer;
+}
+
+.toast {
+    position: fixed;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    background: #111827;
+    color: white;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    z-index: 9999;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
