@@ -42,13 +42,13 @@ async function startTraining() {
     return await response.json();
 }
 
-async function finishTraining(entrenamientoId, categoria, notes) {
+async function finishTraining(entrenamientoId, tipoEntrenamiento, notes) {
     const response = await fetch(API_URL, {
         method: 'POST',
         body: JSON.stringify({
             action: 'finishTraining',
             entrenamientoId,
-            categoria,
+            tipoEntrenamiento,
             notes
         })
     });

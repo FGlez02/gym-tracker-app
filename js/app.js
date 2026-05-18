@@ -313,15 +313,15 @@ async function loadTrainingTypes() {
 
         trainingCategorySelect.innerHTML = '<option value="">Elegir categoria</option>';
 
-        data.categorias.forEach(categoria => {
+        data.tiposEntrenamiento.forEach(tipo => {
             const option = document.createElement('option');
-            option.value = categoria;
-            option.textContent = categoria;
+            option.value = tipo;
+            option.textContent = tipo;
             trainingCategorySelect.appendChild(option);
         });
 
     } catch (error) {
-        console.error('Error cargando categorias:', error);
+        console.error('Error cargando tipos de entrenamiento:', error);
     }
 }
 
@@ -394,7 +394,7 @@ finishTrainingBtn.addEventListener('click', () => {
 });
 
 confirmFinishBtn.addEventListener('click', async () => {
-    const categoria = trainingCategorySelect.value;
+    const tipoEntrenamiento = trainingCategorySelect.value;
     const notes = trainingNotesInput.value;
 
     if (!currentTrainingId) {
@@ -402,8 +402,8 @@ confirmFinishBtn.addEventListener('click', async () => {
         return;
     }
 
-    if (!categoria) {
-        alert('Elige una categoria.');
+    if (!tipoEntrenamiento) {
+        alert('Elige un tipo de entrenamiento.');
         return;
     }
 
@@ -411,7 +411,7 @@ confirmFinishBtn.addEventListener('click', async () => {
         confirmFinishBtn.disabled = true;
         confirmFinishBtn.textContent = 'Finalizando...';
 
-        const result = await finishTraining(currentTrainingId, categoria, notes);
+        const result = await finishTraining(currentTrainingId, tipoEntrenamiento, notes);
 
         if (!result.success) {
             alert('No se pudo finalizar el entrenamiento.');
