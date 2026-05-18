@@ -371,6 +371,7 @@ startTrainingBtn.addEventListener('click', async () => {
         startTrainingBtn.textContent = 'Iniciando...';
 
         const result = await startTraining();
+        
 
         if (!result.success) {
             alert('No se pudo iniciar el entrenamiento.');
@@ -412,7 +413,8 @@ confirmFinishBtn.addEventListener('click', async () => {
         confirmFinishBtn.disabled = true;
         confirmFinishBtn.textContent = 'Finalizando...';
 
-        const result = await finishTraining(currentTrainingId, tipoEntrenamiento, notes);
+        const result = await finishTrainingApi(currentTrainingId, tipoEntrenamiento, notes);
+        console.log('Resultado finishTraining:', result);
 
         if (!result.success) {
             alert('No se pudo finalizar el entrenamiento.');
