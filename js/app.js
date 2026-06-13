@@ -362,8 +362,13 @@ async function loadActiveTraining() {
 
 function setTrainingActive(entrenamientoId, inicio) {
     startTrainingTimer(inicio);
+
     sessionStatus.textContent = 'Entrenamiento iniciado';
-    sessionDetail.textContent = `ID: ${entrenamientoId} · Inicio: ${inicio}`;
+
+    sessionDetail.textContent = `ID: ${entrenamientoId}`;
+
+    document.getElementById('training-start-time').textContent =
+        `Inicio: ${inicio.slice(0, 5)}`;
 
     startTrainingBtn.disabled = true;
     finishTrainingBtn.disabled = false;
@@ -378,6 +383,9 @@ function setTrainingInactive() {
     clearInterval(trainingTimerInterval);
 
     trainingTimer.textContent = '00:00:00';
+
+    document.getElementById('training-start-time').textContent = 'Inicio: --';
+    document.getElementById('training-timer').textContent = '0h 00min';
 
     finishPanel.classList.add('hidden');
 }
@@ -492,25 +500,23 @@ function startTrainingTimer(startTime) {
 
     updateTrainingTimer();
 
-    trainingTimerInterval = setInterval(updateTrainingTimer, 1000);
+    trainingTimerInterval = setInterval(updateTrainingTimer, 60000);
 }
 
 function updateTrainingTimer() {
 
     if (!trainingStartTimestamp) return;
 
-    const now = Date.now();
+    const ahora = Date.now();
+    const diffMs = Math.max(0, ahora - trainingStartTimestamp);
 
-    const diff = Math.floor((now - trainingStartTimestamp) / 1000);
+    const totalMin = Math.floor(diffMs / 60000);
 
-    const hours = Math.floor(diff / 3600);
-    const minutes = Math.floor((diff % 3600) / 60);
-    const seconds = diff % 60;
+    const horas = Math.floor(totalMin / 60);
+    const minutos = totalMin % 60;
 
-    trainingTimer.textContent =
-        `${String(hours).padStart(2, '0')}:` +
-        `${String(minutes).padStart(2, '0')}:` +
-        `${String(seconds).padStart(2, '0')}`;
+    document.getElementById('trainingTimer').textContent =
+        `${horas}h ${String(minutos).padStart(2, '0')}min`;
 }
 
 copyLastSessionBtn.addEventListener('click', () => {
