@@ -347,7 +347,7 @@ async function loadActiveTraining() {
             currentTrainingId = data.entrenamientoId;
             localStorage.setItem('currentTrainingId', currentTrainingId);
 
-            setTrainingActive(data.entrenamientoId, data.inicio);
+            setTrainingActive(data.entrenamientoId, data.inicio, data.inicioTimestamp);
         } else {
             currentTrainingId = null;
             localStorage.removeItem('currentTrainingId');
@@ -360,15 +360,18 @@ async function loadActiveTraining() {
     }
 }
 
-function setTrainingActive(entrenamientoId, inicio) {
-    startTrainingTimer(inicio);
+function setTrainingActive(entrenamientoId, inicio, inicioTimestamp) {
+    startTrainingTimer(inicioTimestamp);
 
     sessionStatus.textContent = 'Entrenamiento iniciado';
 
     sessionDetail.textContent = `ID: ${entrenamientoId}`;
 
-    document.getElementById('training-start-time').textContent =
-        `Inicio: ${inicio.slice(0, 5)}`;
+    const startTimeElement = document.getElementById('training-start-time');
+
+    if (startTimeElement) {
+        startTimeElement.textContent = `Inicio: ${String(inicio).slice(0, 5)}`;
+    }
 
     startTrainingBtn.disabled = true;
     finishTrainingBtn.disabled = false;
@@ -380,12 +383,20 @@ function setTrainingInactive() {
 
     startTrainingBtn.disabled = false;
     finishTrainingBtn.disabled = true;
+
     clearInterval(trainingTimerInterval);
+    trainingStartTimestamp = null;
 
-    trainingTimer.textContent = '00:00:00';
+    const startTimeElement = document.getElementById('training-start-time');
+    const timerElement = document.getElementById('training-timer');
 
-    document.getElementById('training-start-time').textContent = 'Inicio: --';
-    document.getElementById('training-timer').textContent = '0h 00min';
+    if (startTimeElement) {
+        startTimeElement.textContent = 'Inicio: --';
+    }
+
+    if (timerElement) {
+        timerElement.textContent = '0h 00min';
+    }
 
     finishPanel.classList.add('hidden');
 }
@@ -406,7 +417,7 @@ startTrainingBtn.addEventListener('click', async () => {
         currentTrainingId = result.entrenamientoId;
         localStorage.setItem('currentTrainingId', currentTrainingId);
 
-        setTrainingActive(result.entrenamientoId, result.inicio);
+        setTrainingActive(result.entrenamientoId, result.inicio, result.inicioTimestamp);
 
     } catch (error) {
         console.error('Error iniciando entrenamiento:', error);
@@ -479,22 +490,17 @@ function setTodayDate() {
         formatted.charAt(0).toUpperCase() + formatted.slice(1);
 }
 
-function startTrainingTimer(startTime) {
+function startTrainingTimer(inicioTimestamp) {
 
     clearInterval(trainingTimerInterval);
 
-    const today = new Date();
+    const startDate = new Date(inicioTimestamp);
 
-    const [hours, minutes, seconds] = startTime.split(':').map(Number);
-
-    const startDate = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate(),
-        hours,
-        minutes,
-        seconds
-    );
+    if (isNaN(startDate.getTime())) {
+        console.error('inicioTimestamp inválido:', inicioTimestamp);
+        trainingTimer.textContent = '0h 00min';
+        return;
+    }
 
     trainingStartTimestamp = startDate.getTime();
 
@@ -504,8 +510,14 @@ function startTrainingTimer(startTime) {
 }
 
 function updateTrainingTimer() {
-
     if (!trainingStartTimestamp) return;
+
+    const timerElement = document.getElementById('training-timer');
+
+    if (!timerElement) {
+        console.error('No existe el elemento #training-timer en el HTML');
+        return;
+    }
 
     const ahora = Date.now();
     const diffMs = Math.max(0, ahora - trainingStartTimestamp);
@@ -515,7 +527,7 @@ function updateTrainingTimer() {
     const horas = Math.floor(totalMin / 60);
     const minutos = totalMin % 60;
 
-    document.getElementById('trainingTimer').textContent =
+    timerElement.textContent =
         `${horas}h ${String(minutos).padStart(2, '0')}min`;
 }
 
@@ -543,6 +555,13 @@ copyLastSessionBtn.addEventListener('click', () => {
 
 
 function showToast(message) {
+
+    const toast = document.getElementById('toast');
+
+    if (!toast) {
+        console.warn('Toast no encontrado:', message);
+        return;
+    }
 
     toast.textContent = message;
 
